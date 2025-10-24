@@ -1,3 +1,8 @@
+/* =========================================================
+   Muhabbet Ocakbaşı • Menü CSS (3 sütun düzen • GÜNCEL)
+   ========================================================= */
+
+/* Temel değişkenler */
 :root{
   --red:#B5111F;
   --red2:#A31222;
@@ -5,12 +10,16 @@
   --text:#e9e9ea;
   --glass:rgba(255,255,255,.06);
   --border:rgba(255,255,255,.12);
+
+  /* Layout */
+  --sideW: 280px;   /* Sol panel genişliği (md+) */
+  --rightW: 320px;  /* Sağ ray genişliği (lg+) */
 }
 
 html{scroll-behavior:smooth;scroll-padding-top:84px;}
 body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
 
-/* Sabit cam navbar */
+/* Navbar (cam) */
 .navbar-glass{
   background:linear-gradient(180deg,rgba(0,0,0,.7),rgba(0,0,0,.35));
   backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
@@ -19,59 +28,140 @@ body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-s
 .navbar{padding:.5rem .75rem}
 .brand-logo{height:48px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
 
-/* Başlık */
-.menu-hero{padding-top:90px}
+/* Başlık (orta sütun) */
+.menu-hero{padding-top:90px;text-align:left;margin:0 1rem}
 .menu-hero h1{font-family:"Playfair Display",serif;font-weight:800}
 
-/* Kategori çipleri (mobil yatay) */
-.cat-strip{display:flex;gap:.5rem;overflow-x:auto;padding:.5rem .75rem .75rem;border-bottom:1px solid var(--border)}
+/* ---------------------------
+   KATEGORİLER
+   - Mobil: yatay
+   - md+: sol sabit panel (tam-geniş dikdörtgen butonlar, aralıksız)
+   --------------------------- */
+
+/* Mobil (varsayılan) yatay */
+.cat-strip{
+  display:flex;gap:.6rem;overflow-x:auto;padding:.5rem 1rem .75rem;
+  border-bottom:1px solid var(--border)
+}
 .cat-strip::-webkit-scrollbar{height:6px}
 .cat-strip::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:999px}
-.chip{
-  border:1px solid var(--border);background:var(--glass);color:#fff;
-  padding:.5rem .75rem;border-radius:999px;white-space:nowrap;font-weight:600
-}
-.chip.active{background:var(--red);border-color:transparent}
 
-/* Kategori başlık görseli */
-.cat-hero{
-  position:relative;height:210px;margin:.75rem .75rem 1rem;border-radius:16px;
+.chip{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.6rem .9rem;border-radius:8px;
+  border:1px solid var(--border);background:var(--glass);
+  color:#fff;font-weight:600;line-height:1.1;white-space:nowrap;
+  transition:background .2s,border-color .2s,box-shadow .2s
+}
+.chip:hover,.chip:focus-visible{background:#1c1c1d;border-color:rgba(255,255,255,.24)}
+.chip.active{background:var(--red2);border-color:var(--red2);color:#fff}
+
+/* md+: sol panel */
+@media (min-width:768px){
+  .cat-strip{
+    position:fixed;left:0;top:120px;
+    width:var(--sideW);height:calc(100vh - 120px);
+    display:flex;flex-direction:column;align-items:stretch;
+    gap:0;padding:0;overflow-y:auto;overflow-x:hidden;
+    border-right:1px solid var(--border);border-bottom:0;background:transparent
+  }
+  .chip{width:100%;padding:1rem 1.15rem;font-size:1.05rem;border-radius:0}
+  .chip:first-child{border-top-left-radius:12px;border-top-right-radius:12px}
+  .chip:last-child{border-bottom-left-radius:12px;border-bottom-right-radius:12px}
+}
+
+/* ---------------------------
+   SAĞ RAY (iki görsel kart)
+   Not: HTML’de <aside class="right-rail"> varsa aktif olur.
+   --------------------------- */
+@media (min-width:992px){
+  .right-rail{
+    position:fixed;right:0;top:120px;width:var(--rightW);
+    height:calc(100vh - 120px);padding:0 1rem 1rem;
+    display:grid;grid-template-rows:1fr 1fr;gap:1rem;
+    border-left:1px solid var(--border)
+  }
+}
+
+/* Banner kartları (sağ ray içindeki kullanım) */
+.right-rail .cat-hero{
+  position:relative;min-height:260px;margin:1rem 0 0;border-radius:22px;
   background:#111 center/cover no-repeat;overflow:hidden
 }
-.cat-hero::before{ /* parallax mask */
-  content:"";position:absolute;inset:-20% -5%;background:inherit;filter:brightness(.9);
-  transform:translateY(var(--parallax,0));transition:transform .25s ease;
+.right-rail .cat-hero::before{content:"";position:absolute;inset:0;background:inherit;filter:brightness(.9)}
+.right-rail .cat-hero .cat-hero-overlay{
+  position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.55));
+  display:flex;flex-direction:column;justify-content:flex-end;padding:1rem 1.2rem
 }
-.cat-hero-overlay{
-  position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.65));
-  display:flex;flex-direction:column;justify-content:flex-end;padding:1rem
-}
+
+/* Tek banner kullanımı (sağ ray yoksa) */
+.cat-hero{position:relative;height:210px;margin:.75rem 1rem 1rem;border-radius:16px;background:#111 center/cover no-repeat;overflow:hidden}
+.cat-hero::before{content:"";position:absolute;inset:-20% -5%;background:inherit;filter:brightness(.9);transform:translateY(var(--parallax,0));transition:transform .25s ease}
+.cat-hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.65));display:flex;flex-direction:column;justify-content:flex-end;padding:1rem}
 .cat-hero h2{font-family:"Playfair Display",serif;font-weight:800;margin:0}
 .cat-hero p{opacity:.85;margin:.25rem 0 0}
 
-/* Liste */
-#listRoot{padding:0 .75rem 1.5rem}
+/* Banner görselleri */
+.cat-hero[data-cat="etler"]{background-image:url('images/banners/etler.jpg')}
+.cat-hero[data-cat="mezeler"]{background-image:url('images/banners/mezeler.jpg')}
+.cat-hero[data-cat="aras"]{background-image:url('images/banners/aras.jpg')}
+.cat-hero[data-cat="durum"]{background-image:url('images/banners/durum.jpg')}
+.cat-hero[data-cat="tasfirin"]{background-image:url('images/banners/tasfirin.jpg')}
+.cat-hero[data-cat="raki"]{background-image:url('images/banners/raki.jpg')}
+.cat-hero[data-cat="sarap"]{background-image:url('images/banners/sarap.jpg')}
+
+/* Orta sütun boşlukları (sol panel + sağ ray dikkate alınır) */
+@media (min-width:768px){
+  .menu-hero{margin-left:calc(var(--sideW) + 1rem)}
+  #listRoot{margin-left:calc(var(--sideW) + .5rem)}
+}
+@media (min-width:992px){
+  .menu-hero{margin-right:calc(var(--rightW) + 1rem)}
+  #listRoot{margin-right:calc(var(--rightW) + .5rem)}
+}
+
+/* ---------------------------
+   ÜRÜN LİSTESİ (çizgili, fiyat yakın)
+   --------------------------- */
+#listRoot{padding:0 1rem 1.5rem}
+
 .item{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:.9rem 1rem;margin:.5rem 0;border-radius:14px;
-  background:var(--glass);border:1px solid var(--border);
-  animation:rise .45s ease both;
+  display:flex;align-items:baseline;gap:.8rem;
+  padding:.35rem 0;margin:0;background:transparent;border:0;
+  border-bottom:2px solid rgba(255,255,255,.85);
+  font-size:1rem;line-height:1.35;animation:rise .25s ease both
 }
-.item .name{font-weight:700}
-.item .price{font-weight:800;color:#ffe2e2}
-
-/* Stagger */
+.item:last-child{border-bottom-color:rgba(255,255,255,.35)}
 .item[data-i]{animation-delay:calc(var(--i)*60ms)}
-@keyframes rise{
-  from{opacity:0;transform:translateY(8px) scale(.98)}
-  to{opacity:1;transform:translateY(0) scale(1)}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.item .name-wrap{flex:1 1 auto;max-width:100%}
+.item .name{font-weight:700;font-size:1rem}
+.item .desc{font-size:.82rem;opacity:.8}
+
+.item .price{
+  flex:0 0 auto;min-width:72px;text-align:right;
+  font-size:1rem;font-weight:800;color:#ffe2e2
 }
 
-/* Yönetim paneli */
+/* Küçük ekran optimizasyonu */
+@media (max-width:767.98px){
+  .menu-hero{margin:0 1rem}
+  #listRoot{margin:0 1rem 1.5rem}
+}
+@media (max-width:480px){
+  .item{gap:.6rem;padding:.28rem 0;border-bottom-width:1.5px}
+  .item .name{font-size:.95rem}
+  .item .desc{font-size:.76rem}
+  .item .price{font-size:.95rem;min-width:60px}
+}
+
+/* ---------------------------
+   Admin panel
+   --------------------------- */
 .admin-btn{
   position:fixed;right:12px;bottom:16px;z-index:1050;border:1px solid var(--border);
-  background:var(--glass);color:#fff;border-radius:999px;padding:.7rem .9rem;
-  box-shadow:0 8px 24px rgba(0,0,0,.35)
+  background:var(--glass);color:#fff;border-radius:999px;padding:.7rem .9rem;box-shadow:0 8px 24px rgba(0,0,0,.35)
 }
 .admin-dialog{border:none;background:transparent}
 .panel{
@@ -86,17 +176,6 @@ body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-s
 .row-item input{background:#1a1a1b;border:1px solid var(--border);color:#fff}
 .row-item .btn{white-space:nowrap}
 
-/* Kategoriye göre banner görselleri (başlık görselleri) */
-.cat-hero[data-cat="etler"]{background-image:url('images/banners/etler.jpg')}
-.cat-hero[data-cat="mezeler"]{background-image:url('images/banners/mezeler.jpg')}
-.cat-hero[data-cat="aras"]{background-image:url('images/banners/aras.jpg')}
-.cat-hero[data-cat="durum"]{background-image:url('images/banners/durum.jpg')}
-.cat-hero[data-cat="tasfirin"]{background-image:url('images/banners/tasfirin.jpg')}
-.cat-hero[data-cat="raki"]{background-image:url('images/banners/raki.jpg')}
-.cat-hero[data-cat="sarap"]{background-image:url('images/banners/sarap.jpg')}
-
-/* Küçük ekran < 360 iyileştirme */
-@media (max-width:360px){
-  .brand-logo{height:42px}
-  .cat-hero{height:180px}
-}
+/* Başlıklar */
+.item + .group-title,
+.group-title{margin:.5rem 0 .25rem 0;font-weight:800;letter-spacing:.02em}
